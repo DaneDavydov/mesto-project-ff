@@ -37,8 +37,6 @@ profileEditButton.addEventListener('click', () => {
 });
 
 //редактирование профиля
-// nameInput.value = profileTitle.textContent;
-// jobInput.value = profileDescription.textContent;
 function handleFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = nameInput.value;
