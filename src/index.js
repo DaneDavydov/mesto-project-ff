@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { initialCards, createCard, deleteCard, likeCard } from './components/cards.js';
-import { openModal, closeModal } from './components/modal.js';
+import { openModal, closeModal, setPopupListeners } from './components/modal.js';
 
 // DOM узлы
 const placesList = document.querySelector('.places__list');
@@ -10,7 +10,7 @@ const profileEditButton = document.querySelector('.profile__edit-button');
 const popupEdit = document.querySelector('.popup_type_edit');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
-const formElement = document.querySelector('.popup__form');
+const editForm = document.forms['edit-profile'];
 const nameInput = document.querySelector('.popup__input_type_name');
 const jobInput = document.querySelector('.popup__input_type_description');
 const popupImg = document.querySelector('.popup_type_image');
@@ -36,6 +36,9 @@ profileEditButton.addEventListener('click', () => {
   openModal(popupEdit);
 });
 
+//закрытие попапов
+setPopupListeners();
+
 //редактирование профиля
 function handleFormSubmit(evt) {
   evt.preventDefault();
@@ -44,7 +47,7 @@ function handleFormSubmit(evt) {
   closeModal(popupEdit);
 }
 
-formElement.addEventListener('submit', handleFormSubmit);
+editForm.addEventListener('submit', handleFormSubmit);
 
 //добавление карточки с картинкой пользователем на страницу
 function handleAddCard (evt) {

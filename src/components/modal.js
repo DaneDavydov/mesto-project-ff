@@ -14,14 +14,15 @@ function closeModalEsc(evt) {
     closeModal(popupIsOpened);
   }
 }
-
-const modals = document.querySelectorAll('.popup');
-modals.forEach( (modal) => {
-  modal.addEventListener('mousedown', (evt) => {
-    if (evt.target.classList.contains('popup__close') || evt.target.classList.contains('popup_is-opened')) {
-      closeModal(modal);
-    }
+function setPopupListeners() {
+  const modals = document.querySelectorAll('.popup');
+  modals.forEach( (modal) => {
+    modal.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup__close') || evt.target.classList.contains('popup_is-opened')) {
+        closeModal(modal);
+      }
+    })
   })
-})
+}
 
-export { openModal, closeModal };
+export { openModal, closeModal, setPopupListeners };
