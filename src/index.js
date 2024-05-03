@@ -46,7 +46,7 @@ function handleFormSubmit(evt) {
 
 formElement.addEventListener('submit', handleFormSubmit);
 
-//добавление карточки пользователем
+//добавление карточки с картинкой пользователем на страницу
 function handleAddCard (evt) {
   evt.preventDefault();
   placesList.prepend(createCard(cardName.value, cardUrl.value, deleteCard, likeCard, handlePopupImg));
