@@ -1,6 +1,10 @@
 import './pages/index.css';
 import { initialCards, createCard, deleteCard, likeCard } from './components/cards.js';
 import { openModal, closeModal, setPopupListeners } from './components/modal.js';
+import { enableValidation, clearValidation} from './components/validation.js';
+import { validationConfig } from './components/constants.js';
+
+console.log(validationConfig.inactiveButtonClass)
 
 // DOM узлы
 const placesList = document.querySelector('.places__list');
@@ -27,12 +31,14 @@ initialCards.forEach(item => {
 
 //открытие попапов
 profileAddButton.addEventListener('click', () => {
+  clearValidation(popupAddCard, validationConfig);
   openModal(popupAddCard);
 });
 
 profileEditButton.addEventListener('click', () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
+  clearValidation(popupEdit, validationConfig);
   openModal(popupEdit);
 });
 
@@ -68,3 +74,5 @@ function handlePopupImg (evt) {
     caption.textContent = evt.target.alt;
   }
 }
+
+enableValidation(validationConfig);
