@@ -1,60 +1,61 @@
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg',
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg',
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg',
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg',
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg',
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg',
-  }
-];
+import {likeCard, removeLikeCard} from './api.js';
 
 // Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
 
 // Функция создания карточки
-function createCard(name, link, deleteCard, likeCard, openImage) {
+function renderCard(data, cohortId, removeCard, toggleLike, openImage) {
   const card = cardTemplate.querySelector('.card').cloneNode(true);
   const cardDeleteButton = card.querySelector('.card__delete-button');
   const likeButton = card.querySelector('.card__like-button');
+  const likeCounter = card.querySelector('.card__like-counter');
   const image = card.querySelector('.card__image');
+  const isLiked = data.likes.some( like => like._id === cohortId);
 
-  image.src = link;
-  image.alt = name;
-  card.querySelector('.card__title').textContent = name;
-  cardDeleteButton.addEventListener('click', (event) => deleteCard(event));
+  image.src = data.link;
+  image.alt = data.name;
+  card.querySelector('.card__title').textContent = data.name;
+  likeCounter.textContent = data.likes.length;
 
-  likeButton.addEventListener('click', likeCard);
+  data.owner._id === cohortId ? cardDeleteButton.style.display = 'block' : cardDeleteButton.style.display = 'none';
+  isLiked ? likeButton.classList.add('card__like-button_is-active') : likeButton.classList.remove('card__like-button_is-active');
+
+  cardDeleteButton.addEventListener('click', () => removeCard(card, data));
+  likeButton.addEventListener('click', () => toggleLike(card, data));
   image.addEventListener('click', openImage);
 
   return card;
 }
 
-// Функция удаления карточки
-function deleteCard() {
-  const card = event.target.closest('.card');
+//включение выключения лайка
+function toggleLikeCard(card, data) {
+  const likeButton = card.querySelector('.card__like-button');
+  const likeCounter = card.querySelector('.card__like-counter');
+
+  if (likeButton.classList.contains('card__like-button_is-active')) {
+    removeLikeCard(data._id)
+      .then( data => {
+        likeCounter.textContent = data.likes.length;
+        likeButton.classList.remove('card__like-button_is-active');
+      })
+      .catch( err => {
+        console.log(err)
+      })
+  } else {
+    likeCard(data._id)
+      .then( data => {
+        likeCounter.textContent = data.likes.length;
+        likeButton.classList.add('card__like-button_is-active');
+      })
+      .catch( err => {
+        console.log(err)
+      })
+  }
+}
+
+//Функция удаления карточки
+function removeCard(card) {
   card.remove();
 }
 
-// Лайк карточки
-function likeCard(evt) {
-  evt.target.classList.toggle('card__like-button_is-active')
-}
-
-export { initialCards, createCard, deleteCard, likeCard };
+export { renderCard, removeCard, toggleLikeCard };
